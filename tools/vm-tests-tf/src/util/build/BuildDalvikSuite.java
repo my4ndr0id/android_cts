@@ -631,7 +631,7 @@ public class BuildDalvikSuite {
             scanner.close();
         }
         if (scanner2 != null) {
-            scanner.close();
+            scanner2.close();
         }
         return md;
     }
@@ -650,6 +650,7 @@ public class BuildDalvikSuite {
                 FileReader reader = new FileReader(file);
                 char[] charContents = new char[(int) file.length()];
                 reader.read(charContents);
+                reader.close();
                 String contents = new String(charContents);
                 if (contents.equals(content)) {
                     // System.out.println("skipping identical: "
