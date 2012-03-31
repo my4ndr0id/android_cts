@@ -22,7 +22,9 @@ CTS_SECURITY_APPS_LIST := \
 	CtsSimpleAppInstall \
 	CtsSimpleAppInstallDiffCert \
 	CtsTargetInstrumentationApp \
-	CtsUsePermissionDiffCert
+	CtsUsePermissionDiffCert \
+	CtsMonkeyApp \
+	CtsMonkeyApp2 \
 
 # These test cases will be analyzed by the CTS API coverage tools. 
 CTS_COVERAGE_TEST_CASE_LIST := \
@@ -31,27 +33,34 @@ CTS_COVERAGE_TEST_CASE_LIST := \
 	CtsAccessibilityServiceTestCases \
 	CtsAccountManagerTestCases \
 	CtsAdminTestCases \
+	CtsAnimationTestCases \
 	CtsAppTestCases \
 	CtsBluetoothTestCases \
 	CtsContentTestCases \
 	CtsDatabaseTestCases \
+	CtsDelegatingAccessibilityService \
+	CtsDeviceAdmin \
 	CtsDpiTestCases \
 	CtsDpiTestCases2 \
 	CtsDrmTestCases \
 	CtsExampleTestCases \
 	CtsGestureTestCases \
 	CtsGraphicsTestCases \
+	CtsGraphics2TestCases \
 	CtsHardwareTestCases \
 	CtsHoloTestCases \
 	CtsJniTestCases \
 	CtsLocationTestCases \
+	CtsMediaStressTestCases \
 	CtsMediaTestCases \
 	CtsNdefTestCases \
 	CtsNetTestCases \
+	CtsOpenGlPerfTestCases \
 	CtsOsTestCases \
 	CtsPermissionTestCases \
 	CtsPermission2TestCases \
 	CtsPreferenceTestCases \
+	CtsPreference2TestCases \
 	CtsProviderTestCases \
 	CtsRenderscriptTestCases \
 	CtsSaxTestCases \
@@ -60,20 +69,27 @@ CTS_COVERAGE_TEST_CASE_LIST := \
 	CtsTelephonyTestCases \
 	CtsTestStubs \
 	CtsTextTestCases \
+	CtsTextureViewTestCases \
 	CtsUtilTestCases \
 	CtsViewTestCases \
 	CtsWebkitTestCases \
-	CtsWidgetTestCases
+	CtsWidgetTestCases \
+	SignatureTest \
+	TestDeviceSetup \
+	$(CTS_SECURITY_APPS_LIST)
 
 CTS_TEST_CASE_LIST := \
-	TestDeviceSetup \
-	CtsDelegatingAccessibilityService \
-	CtsDeviceAdmin \
-	SignatureTest \
+	com.replica.replicaisland \
 	ApiDemos \
 	ApiDemosReferenceTest \
 	$(CTS_COVERAGE_TEST_CASE_LIST) \
-	$(CTS_SECURITY_APPS_LIST)
+
+CTS_NATIVE_EXES := \
+	CtsNativeMediaTestCases
+
+CTS_TEST_CASES := $(call cts-get-native-paths,$(CTS_NATIVE_EXES))
+
+CTS_TEST_XMLS := $(call cts-get-native-xmls,$(CTS_NATIVE_EXES))
 
 # The following files will be placed in the tools directory of the CTS distribution
 CTS_TOOLS_LIST :=

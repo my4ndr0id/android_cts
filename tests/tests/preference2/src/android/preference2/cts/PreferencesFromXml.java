@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package android.dpi.cts;
+package android.preference2.cts;
 
-import android.app.Activity;
+import com.android.cts.preference2.R;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-/** {@link Activity} that calls {@link #setRequestedOrientation(int)} with the extra value. */
-public class ConfigurationScreenLayoutActivity extends Activity {
-
-    static final String EXTRA_ORIENTATION = "orientation";
+public class PreferencesFromXml extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int orientation = getIntent().getIntExtra(EXTRA_ORIENTATION, -1);
-        setRequestedOrientation(orientation);
+        addPreferencesFromResource(R.xml.pref_cb);
     }
 }

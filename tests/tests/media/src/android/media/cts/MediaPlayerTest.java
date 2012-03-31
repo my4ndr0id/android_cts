@@ -27,6 +27,7 @@ import android.os.Environment;
 import android.os.PowerManager;
 
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Tests for the MediaPlayer API and local video/audio playback.
@@ -36,6 +37,7 @@ import java.io.File;
  * Attribution 3.0 License at http://creativecommons.org/licenses/by/3.0/us/.
  */
 public class MediaPlayerTest extends MediaPlayerTestBase {
+
     public void testPlayNullSource() throws Exception {
         try {
             mMediaPlayer.setDataSource((String) null);
@@ -109,41 +111,51 @@ public class MediaPlayerTest extends MediaPlayerTestBase {
      * from the time setDisplay() was called
      */
     public void testVideoSurfaceResetting() throws Exception {
-        final int tolerance = 150;
+        final int tolerance = 66 * 3 / 2; /* Test video is 15fps... 66 ms per frame */
         final int seekPos = 1500;
 
-        playVideoTest(R.raw.testvideo, 352, 288);
+        final CountDownLatch seekDone = new CountDownLatch(1);
 
-        mMediaPlayer.start();
+        mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mp) {
+                seekDone.countDown();
+            }
+        });
+
+        loadResource(R.raw.testvideo);
+        playLoadedVideo(352, 288, -1);
+
         Thread.sleep(SLEEP_TIME);
 
         int posBefore = mMediaPlayer.getCurrentPosition();
         mMediaPlayer.setDisplay(getActivity().getSurfaceHolder2());
         int posAfter = mMediaPlayer.getCurrentPosition();
 
-        assertEquals(posAfter, posBefore);
+        assertEquals(posAfter, posBefore, tolerance);
         assertTrue(mMediaPlayer.isPlaying());
 
         Thread.sleep(SLEEP_TIME);
 
         mMediaPlayer.seekTo(seekPos);
+        seekDone.await();
         Thread.sleep(SLEEP_TIME / 2);
 
         posBefore = mMediaPlayer.getCurrentPosition();
         mMediaPlayer.setDisplay(null);
         posAfter = mMediaPlayer.getCurrentPosition();
 
-        assertEquals(posAfter, posBefore);
+        assertEquals(posAfter, posBefore, tolerance);
         assertEquals(seekPos + SLEEP_TIME / 2, posBefore, tolerance);
         assertTrue(mMediaPlayer.isPlaying());
 
         Thread.sleep(SLEEP_TIME);
 
         posBefore = mMediaPlayer.getCurrentPosition();
-        mMediaPlayer.setDisplay(getActivity().generateSurfaceHolder());
+        mMediaPlayer.setDisplay(getActivity().getSurfaceHolder());
         posAfter = mMediaPlayer.getCurrentPosition();
 
-        assertEquals(posAfter, posBefore);
+        assertEquals(posAfter, posBefore, tolerance);
         assertTrue(mMediaPlayer.isPlaying());
 
         Thread.sleep(SLEEP_TIME);

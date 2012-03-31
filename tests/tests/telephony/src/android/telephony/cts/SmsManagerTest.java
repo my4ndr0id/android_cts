@@ -84,7 +84,8 @@ public class SmsManagerTest extends AndroidTestCase {
                     "302370",   // Fido
                     "30237",    // Fido
                     "311490",   // Virgin Mobile
-                    "310000"    // Tracfone
+                    "310000",   // Tracfone
+                    "46003"     // China Telecom
             );
 
     // List of network operators that doesn't support Data(binary) SMS message
@@ -158,19 +159,24 @@ public class SmsManagerTest extends AndroidTestCase {
         assertNotNull(dividedMessages);
         int numParts;
         if (TelephonyUtils.isSkt(mTelephonyManager)) {
-            numParts = 5;
+            assertTrue(isComplete(dividedMessages, 5) || isComplete(dividedMessages, 3));
         } else if (TelephonyUtils.isKt(mTelephonyManager)) {
-            numParts = 4;
+            assertTrue(isComplete(dividedMessages, 4) || isComplete(dividedMessages, 3));
         } else {
-            numParts = 3;
+            assertTrue(isComplete(dividedMessages, 3));
         }
-        assertEquals(numParts, dividedMessages.size());
+    }
+
+    private boolean isComplete(List<String> dividedMessages, int numParts) {
+        if (dividedMessages.size() != numParts) {
+            return false;
+        }
 
         String actualMessage = "";
         for (int i = 0; i < numParts; i++) {
             actualMessage += dividedMessages.get(i);
         }
-        assertEquals(LONG_TEXT, actualMessage);
+        return LONG_TEXT.equals(actualMessage);
     }
 
     @TestTargets({

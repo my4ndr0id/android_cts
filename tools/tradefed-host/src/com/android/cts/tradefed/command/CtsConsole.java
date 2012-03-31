@@ -159,8 +159,8 @@ public class CtsConsole extends Console {
         helpBuilder.append("  run cts --help/--help-all: get more help on running CTS\n");
         helpBuilder.append("List:\n");
         helpBuilder.append("  l/list d/devices: list connected devices and their state\n");
-        helpBuilder.append("  l/list p/packages: list CTS test packages\n");
-        helpBuilder.append("  l/list plans: list CTS test plans\n");
+        helpBuilder.append("  l/list packages: list CTS test packages\n");
+        helpBuilder.append("  l/list p/plans: list CTS test plans\n");
         helpBuilder.append("  l/list i/invocations: list invocations aka CTS test runs currently");
         helpBuilder.append("in progress\n");
         helpBuilder.append("  l/list c/commands: list commands: aka CTS test run commands ");
@@ -203,7 +203,8 @@ public class CtsConsole extends Console {
     private void listResults(CtsBuildHelper ctsBuild) {
         TableFormatter tableFormatter = new TableFormatter();
         List<List<String>> table = new ArrayList<List<String>>();
-        table.add(Arrays.asList("Session","Pass", "Fail","Not Executed","Start time","Plan name"));
+        table.add(Arrays.asList("Session","Pass", "Fail","Not Executed","Start time","Plan name",
+                "Device serial(s)"));
         ITestResultRepo testResultRepo = new TestResultRepo(ctsBuild.getResultsDir());
         for (ITestSummary result : testResultRepo.getSummaries()) {
             table.add(Arrays.asList(Integer.toString(result.getId()),
@@ -211,7 +212,8 @@ public class CtsConsole extends Console {
                     Integer.toString(result.getNumFailed()),
                     Integer.toString(result.getNumIncomplete()),
                     result.getTimestamp(),
-                    result.getTestPlan()));
+                    result.getTestPlan(),
+                    result.getDeviceSerials()));
         }
         tableFormatter.displayTable(table, new PrintWriter(System.out, true));
     }
